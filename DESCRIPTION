@@ -25,5 +25,4 @@ Imports:
     dplyr,
     ggvis
 Suggests:
-    dplyr,
-    ggvis
+    knitr
