@@ -1,10 +1,27 @@
 Package: integRATE
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Integrating -omics Data with Desirability Functions
 Version: 0.1
 Date: 2016-12-07
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Haley Eidem
+Maintainer: haley.eidem@gmail.com
+Description: Our method allows for the application of desirability functions to
+    diverse, heterogeneous -omics data and facilitates integration of results.
+    Our method applies a desirability function to each key variable in all
+    relevant studies based on whether the most desirabile values are the lowest,
+    highest, or most extreme in each variable's distribution, thus transforming
+    all data to a common [0, 1] desirability scale. In addition to the
+    identification of studies and variables to integrate, our method also
+    requires the user to input cut points where each desirability function
+    changes as well as the scale controling how quickly the function changes
+    between the maximum and minimum desirability. Data within studies can
+    be straightforwardly combined using a geometric mean, resulting in a
+    desirability score for each gene in the study containing information from
+    all variables. Eventually, these study-based desirability scores can also be
+    combined using a geometric mean to calculate a combined overall
+    desirability score for each gene across all integrated studies. This score
+    represents the weight of evidence from -omics data for its involvement in
+    the pathology of interest and serves as a metric with which to rank
+    candidate genes for future functional analysis.
 License: What license is it under?
 LazyData: TRUE
