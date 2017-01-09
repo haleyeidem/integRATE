@@ -1,7 +1,7 @@
 Package: integRATE
 Type: Package
 Title: Integrating -omics Data with Desirability Functions
-Version: 1.0.0
+Version: 0.0.0.9000
 Date: 2016-12-07
 Authors@R: person("Haley", "Eidem", email = "haley.eidem@gmail.com",
   role = c("aut", "cre"))
