@@ -23,5 +23,5 @@ Description: Our method allows for the application of desirability functions to
     represents the weight of evidence from -omics data for its involvement in
     the pathology of interest and serves as a metric with which to rank
     candidate genes for future functional analysis.
-License: What license is it under?
+License: MIT + file LICENSE
 LazyData: TRUE
