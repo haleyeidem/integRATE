@@ -25,3 +25,9 @@ Description: Our method allows for the application of desirability functions to
     candidate genes for future functional analysis.
 License: MIT + file LICENSE
 LazyData: TRUE
+Imports:
+    dplyr,
+    ggvis
+Suggests:
+    dplyr,
+    ggvis
