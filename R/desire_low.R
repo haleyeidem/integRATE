@@ -10,7 +10,7 @@ desire_low <- function(x, cut1, cut2,  min = 0, max = 1, scale = 1){
   y[x < cut1] <- 1
   y[x > cut2] <- 0
 
-  # rescale:  des.min to des.max
+  # rescale:  min to max
   y <- (y * (max - min))  + min
 
   return(y)
