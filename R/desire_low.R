@@ -3,9 +3,10 @@
 #' This function maps a numeric variable to a [0, 1] scale where low values are
 #' most desirable.
 #'
-#' @details Values in the top n% will have the highest possible desirability and
-#' values in the botton n% will have the lowest possible desirability. Values
-#' between will be transformed to intermediate values according to the function.
+#' @details Values in the top n percent will have the highest possible
+#' desirability and values in the botton n percent will have the lowest possible
+#' desirability. Values between will be transformed to intermediate values
+#' according to the function.
 #'
 #' @param x Vector of numeric values.
 #' @param cut1,cut2 Percentiles where the desirability function changes.
