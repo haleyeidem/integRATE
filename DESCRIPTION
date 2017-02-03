@@ -22,7 +22,6 @@ LazyData: TRUE
 Depends:
     R (>= 2.10)
 Imports:
-    dplyr,
-    ggvis
+    dplyr
 Suggests:
     knitr
