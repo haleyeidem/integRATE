@@ -15,7 +15,7 @@
 #' @param scale Controls shape of the desirability function. Larger values
 #' correspond to more steep and strict curves whereas smaller values correspond
 #' to more gradual and inclusive curves.
-#' @return A numeric vector of desirability scores.
+#' @return Returns a numeric vector of desirability scores.
 #' @export
 
 desire_high <- function(x, cut1, cut2, min = 0, max = 1, scale = 1){
