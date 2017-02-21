@@ -1,5 +1,3 @@
-##test
-
 ## make toy data
 #df <- data.frame(rnorm(1000, 0, 0.75))
 #df[,2] <- data.frame(c(runif(150, 0, 0.001), runif(400, 0.001, 0.2), runif(250, 0.2, 0.5), runif(200, 0.5, 1)))
