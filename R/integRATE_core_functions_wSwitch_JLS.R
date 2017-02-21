@@ -1,4 +1,4 @@
-##test
+##testing
 
 ## make toy data
 #df <- data.frame(rnorm(1000, 0, 0.75))
