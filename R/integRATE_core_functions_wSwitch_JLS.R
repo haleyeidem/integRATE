@@ -4,11 +4,6 @@
 #colnames(df) <- c("Log Fold Change", "Adjusted P-Value")
 
 ## integRATE core desirability function ##
-
-# !!!!!!!
-# CHECK WITH HALEY ABOUT CUT2/3 BEING MEDIAN AND NOT 0 --- line 106
-# !!!!!!!
-
 desire <- function(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1, cut_type = cut.type, desire_type = desire.type){ # open function
   cut.type <- c("numerical", "num", "percentile", "per", "none", "no") # possible cut types
   desire.type <- c("low", "l", "high", "h", "extremes", "e") # possible desire types
@@ -103,7 +98,7 @@ desire <- function(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1, cut_t
                     } # close for loop
                   }, # close percentile
                   no = { # open none
-                    cut1 <- min(x[nna]); cut4 <- max(x[nna]); cut2 <- 0; cut3 <- 0 # create cuts # CHECK WITH HALEY ABOUT CUT2/3 BEING MEDIAN AND NOT 0
+                    cut1 <- min(x[nna]); cut4 <- max(x[nna]); cut2 <- 0; cut3 <- 0 # create cuts
                     for (i in 1:length(x)){ # open for loop
                       if (is.na(x[i])) next # skip NA
                       if (x[i] <= cut1 | x[i] >= cut4)  y[i] <- 1
