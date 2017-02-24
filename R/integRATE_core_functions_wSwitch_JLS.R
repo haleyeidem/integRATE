@@ -16,8 +16,7 @@ desire <- function(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1, cut_t
   if(max < 0 | max > 1) stop("\nmax must be between zero and one\n")
   if(scale <= 0) stop("\nscale must be greater than zero\n")
 
-  if(missing(cut_type)) cut_type <- "none" # back compatabilities
-  if(cut_type == "none") cut_type <- "no"
+  if(cut_type == "none") cut_type <- "no" # back compatabilities
   if(cut_type == "numerical") cut_type <- "num"
   if(cut_type == "percentile") cut_type <- "per"
   if(desire_type == "low") desire_type <- "l"
@@ -44,9 +43,11 @@ desire <- function(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1, cut_t
                     y[x[nna] > per2] <- 0
                   }, # close percentile
                   no = { # open none
+                    cut1 <- min(x[nna])
+                    cut2 <- max(x[nna])
                     y <- ((x - cut2)/(cut1 - cut2))^scale # transform data
-                    y[x[nna] == min(x[nna])] <- 1
-                    y[x[nna] == max(x[nna])] <- 0
+                    y[x[nna] == cut1] <- 1
+                    y[x[nna] == cut2] <- 0
                   } # close none
                   ) # close nested cut_type switch
          }, # close low
@@ -60,14 +61,16 @@ desire <- function(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1, cut_t
                   }, # close numerical
                   per = { # open percentile
                     per1 <- quantile(x[nna],cut1); per2 <- quantile(x[nna],cut2) # create percentile cuts
-                    y <- ((x - cut1)/(cut2 - cut1))^scale # transform data
+                    y <- ((x - per1)/(per2 - per1))^scale # transform data
                     y[x[nna] < per1] <- 0
                     y[x[nna] > per2] <- 1
                   }, # close percentile
                   no = { # open none
+                    cut1 <- min(x[nna])
+                    cut2 <- max(x[nna])
                     y <- ((x - cut1)/(cut2 - cut1))^scale # transform data
-                    y[x[nna] == min(x[nna])] <- 0
-                    y[x[nna] == max(x[nna])] <- 1
+                    y[x[nna] == cut1] <- 0
+                    y[x[nna] == cut2] <- 1
                   } # close none
                   ) # end nested cut_type switch
          }, # close high
