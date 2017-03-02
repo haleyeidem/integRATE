@@ -64,7 +64,8 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                   per = {
                     if(cut1 >= cut2) stop("\ncut1 must be less than cut2\n")
                     # Calculate percentile cuts
-                    per1 <- quantile(x[nna],cut1); per2 <- quantile(x[nna],cut2)
+                    per1 <- quantile(x[nna],cut1);
+                    per2 <- quantile(x[nna],cut2)
                     # Apply desirability function
                     y <- ((x - per2)/(per1 - per2))^scale
                     # Override desirability score at cuts
@@ -99,7 +100,8 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                   per = {
                     if(cut1 >= cut2) stop("\ncut1 must be less than cut2\n")
                     # Calculate percentile cuts
-                    per1 <- quantile(x[nna],cut1); per2 <- quantile(x[nna],cut2)
+                    per1 <- quantile(x[nna],cut1);
+                    per2 <- quantile(x[nna],cut2)
                     # Apply desirability function
                     y <- ((x - per1)/(per2 - per1))^scale
                     # Override desirability score at cuts
@@ -140,7 +142,10 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                     if(cut2 >= cut3) stop("\ncut2 must be less than cut3\n")
                     if(cut3 >= cut4) stop("\ncut3 must be less than cut4\n")
                     # Calculate percentile cuts
-                    per1 <- quantile(x[nna],cut1); per2 <- quantile(x[nna],cut2); per3 <- quantile(x[nna],cut3); per4 <- quantile(x[nna],cut4)
+                    per1 <- quantile(x[nna],cut1);
+                    per2 <- quantile(x[nna],cut2);
+                    per3 <- quantile(x[nna],cut3);
+                    per4 <- quantile(x[nna],cut4)
                     for (i in 1:length(x)){
                       if (is.na(x[i])) next
                       # Apply desirability function
