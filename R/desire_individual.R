@@ -17,7 +17,7 @@
 #' @return Returns a numeric vector of desirability scores.
 #' @export
 
-desire <- function(x, desire_type = desire.type, cut_type = cut.type, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1){
+desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1){
 
   # Set desirability function
   desire.type <- c("low", "l", "high", "h", "extremes", "e")
