@@ -3,3 +3,4 @@
 export(desire)
 export(desire_high)
 export(desire_low)
+export(desire_overall)
