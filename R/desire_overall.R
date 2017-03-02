@@ -1,3 +1,18 @@
+#' Combine desirability scores
+#'
+#' This function combines any number of individual desirability scores into an
+#' overall desirability score.
+#'
+#' @details Using a weighted geometric mean, this function combines individual
+#' desirability scores to calculate overall desirability scores.
+#' @param ... Any number of vectors of desirability scores (as calculated using
+#' desire()).
+#' @param weights Optional, relative weights reflecting the quality, importance,
+#' or applicability of the variable for which desirability scores have been
+#' calculated.
+#' @return Returns a numeric vector of overall desirability scores.
+#' @export
+
 desire_overall <- function(..., weights = NULL){
 
   # get number of variables
