@@ -19,7 +19,7 @@ correspond to more steep and strict curves whereas smaller values correspond
 to more gradual and inclusive curves.}
 }
 \value{
-A numeric vector of desirability scores.
+Returns a numeric vector of desirability scores.
 }
 \description{
 This function maps a numeric variable to a [0, 1] scale where high values are

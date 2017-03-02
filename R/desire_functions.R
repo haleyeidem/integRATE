@@ -1,7 +1,7 @@
-#' Low values are best
+#' Low, high, and extreme desirability functions
 #'
-#' This function maps a numeric variable to a [0, 1] scale where low values are
-#' most desirable.
+#' These functions map numeric variables to a [0, 1] scale where low, high, or
+#' extreme values are most desirable.
 #'
 #' @details Values in the top n percent will have the highest possible
 #' desirability and values in the botton n percent will have the lowest possible
@@ -9,7 +9,9 @@
 #' according to the function.
 #'
 #' @param x Vector of numeric values.
-#' @param cut1,cut2 Percentiles where the desirability function changes.
+#' @param desire_type Class of desirability function to apply (low, high, or extreme).
+#' @param cut_type Class of cuts assigned to desirability function (numerical, percentile, or none).
+#' @param cut1,cut2,cut3,cut4 Cut points where the desirability function changes.
 #' @param min,max Minimum (default = 0) and maximum (default = 1) desirability
 #' scores.
 #' @param scale Controls shape of the desirability function. Larger values
@@ -18,7 +20,7 @@
 #' @return Returns a numeric vector of desirability scores.
 #' @export
 
-desire <- function(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1, cut_type = cut.type, desire_type = desire.type){
+desire <- function(x, desire_type = desire.type, cut_type = cut.type, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1){
 
   # Set desirability function
   desire.type <- c("low", "l", "high", "h", "extremes", "e")
