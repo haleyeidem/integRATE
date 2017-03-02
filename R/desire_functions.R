@@ -3,10 +3,7 @@
 #' These functions map numeric variables to a [0, 1] scale where low, high, or
 #' extreme values are most desirable.
 #'
-#' @details Values in the top n percent will have the highest possible
-#' desirability and values in the botton n percent will have the lowest possible
-#' desirability. Values between will be transformed to intermediate values
-#' according to the function.
+#' @details
 #'
 #' @param x Vector of numeric values.
 #' @param desire_type Class of desirability function to apply (low, high, or extreme).

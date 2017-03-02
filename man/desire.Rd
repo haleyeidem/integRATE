@@ -4,11 +4,15 @@
 \alias{desire}
 \title{Low, high, and extreme desirability functions}
 \usage{
-desire(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1,
-  cut_type = cut.type, desire_type = desire.type)
+desire(x, desire_type = desire.type, cut_type = cut.type, cut1, cut2, cut3,
+  cut4, min = 0, max = 1, scale = 1)
 }
 \arguments{
 \item{x}{Vector of numeric values.}
+
+\item{desire_type}{Class of desirability function to apply (low, high, or extreme).}
+
+\item{cut_type}{Class of cuts assigned to desirability function (numerical, percentile, or none).}
 
 \item{cut1, cut2, cut3, cut4}{Cut points where the desirability function changes.}
 
@@ -18,10 +22,6 @@ scores.}
 \item{scale}{Controls shape of the desirability function. Larger values
 correspond to more steep and strict curves whereas smaller values correspond
 to more gradual and inclusive curves.}
-
-\item{cut_type}{Class of cuts assigned to desirability function (numerical, percentile, or none).}
-
-\item{desire_type}{Class of desirability function to apply (low, high, or extreme).}
 }
 \value{
 Returns a numeric vector of desirability scores.
@@ -31,9 +31,6 @@ These functions map numeric variables to a [0, 1] scale where low, high, or
 extreme values are most desirable.
 }
 \details{
-Values in the top n percent will have the highest possible
-desirability and values in the botton n percent will have the lowest possible
-desirability. Values between will be transformed to intermediate values
-according to the function.
+
 }
 
