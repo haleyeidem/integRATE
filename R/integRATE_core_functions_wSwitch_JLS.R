@@ -4,7 +4,7 @@
 #colnames(df) <- c("Log Fold Change", "Adjusted P-Value")
 
 ## integRATE core desirability function ##
-desire <- function(x, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1, cut_type = cut.type, desire_type = desire.type){ # open function
+desire <- function(x, desire_type = desire.type, cut_type = cut.type, cut1, cut2, cut3, cut4, min = 0, max = 1, scale = 1){ # open function
   cut.type <- c("numerical", "num", "percentile", "per", "none", "no") # possible cut types
   desire.type <- c("low", "l", "high", "h", "extremes", "e") # possible desire types
 
