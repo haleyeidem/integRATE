@@ -6,9 +6,12 @@
 #' @details
 #'
 #' @param x Vector of numeric values.
-#' @param desire_type Class of desirability function to apply (low, high, or extreme).
-#' @param cut_type Class of cuts assigned to desirability function (numerical, percentile, or none).
-#' @param cut1,cut2,cut3,cut4 Cut points where the desirability function changes.
+#' @param desire_type Class of desirability function to apply (low, high, or
+#' extreme).
+#' @param cut_type Class of cuts assigned to desirability function (numerical,
+#' percentile, or none).
+#' @param cut1,cut2,cut3,cut4 Cut points where the desirability function
+#' changes.
 #' @param min,max Minimum (default = 0) and maximum (default = 1) desirability
 #' scores.
 #' @param scale Controls shape of the desirability function. Larger values
@@ -34,7 +37,7 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
   if(!hasArg(cut_type)) cut_type <- "none"
   if(!is.element(cut_type, cut.type))
     stop("\ncut_type should be one of the following: 'numerical', 'num', 'percentile', 'per', 'none', 'no'")
-  if(cut_type == "none") cut_type <- "no" # back compatabilities
+  if(cut_type == "none") cut_type <- "no"
   if(cut_type == "numerical") cut_type <- "num"
   if(cut_type == "percentile") cut_type <- "per"
 
@@ -64,7 +67,7 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                   per = {
                     if(cut1 >= cut2) stop("\ncut1 must be less than cut2\n")
                     # Calculate percentile cuts
-                    per1 <- quantile(x[nna],cut1);
+                    per1 <- quantile(x[nna],cut1)
                     per2 <- quantile(x[nna],cut2)
                     # Apply desirability function
                     y <- ((x - per2)/(per1 - per2))^scale
@@ -100,7 +103,7 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                   per = {
                     if(cut1 >= cut2) stop("\ncut1 must be less than cut2\n")
                     # Calculate percentile cuts
-                    per1 <- quantile(x[nna],cut1);
+                    per1 <- quantile(x[nna],cut1)
                     per2 <- quantile(x[nna],cut2)
                     # Apply desirability function
                     y <- ((x - per1)/(per2 - per1))^scale
@@ -130,8 +133,10 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                     for (i in 1:length(x)){
                       if (is.na(x[i])) next
                       # Apply desirability function
-                      if (x[i] > cut1 & x[i] < cut2) y[i] <- ((x[i] - cut2)/(cut1 - cut2))^scale
-                      if (x[i] > cut3 & x[i] < cut4) y[i] <- ((x[i] - cut3)/(cut4 - cut3))^scale
+                      if (x[i] > cut1 & x[i] < cut2) y[i] <-
+                          ((x[i] - cut2)/(cut1 - cut2))^scale
+                      if (x[i] > cut3 & x[i] < cut4) y[i] <-
+                          ((x[i] - cut3)/(cut4 - cut3))^scale
                       # Override desirability score between and outside cuts
                       if (x[i] <= cut1 | x[i] >= cut4)  y[i] <- 1
                       if (x[i] >= cut2 & x[i] <= cut3) y[i] <- 0
@@ -142,15 +147,17 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                     if(cut2 >= cut3) stop("\ncut2 must be less than cut3\n")
                     if(cut3 >= cut4) stop("\ncut3 must be less than cut4\n")
                     # Calculate percentile cuts
-                    per1 <- quantile(x[nna],cut1);
-                    per2 <- quantile(x[nna],cut2);
-                    per3 <- quantile(x[nna],cut3);
+                    per1 <- quantile(x[nna],cut1)
+                    per2 <- quantile(x[nna],cut2)
+                    per3 <- quantile(x[nna],cut3)
                     per4 <- quantile(x[nna],cut4)
                     for (i in 1:length(x)){
                       if (is.na(x[i])) next
                       # Apply desirability function
-                      if (x[i] > per1 & x[i] < per2) y[i] <- ((x[i] - per2)/(per1 - per2))^scale
-                      if (x[i] > per3 & x[i] < per4) y[i] <- ((x[i] - per3)/(per4 - per3))^scale
+                      if (x[i] > per1 & x[i] < per2) y[i] <-
+                          ((x[i] - per2)/(per1 - per2))^scale
+                      if (x[i] > per3 & x[i] < per4) y[i] <-
+                          ((x[i] - per3)/(per4 - per3))^scale
                       # Override desirability score between and outside cuts
                       if (x[i] <= per1 | x[i] >= per4)  y[i] <- 1
                       if (x[i] >= per2 & x[i] <= per3) y[i] <- 0
@@ -158,7 +165,10 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                   },
                   # No cuts
                   no = {
-                    cut1 <- min(x[nna]); cut4 <- max(x[nna]); cut2 <- 0; cut3 <- 0
+                    cut1 <- min(x[nna])
+                    cut4 <- max(x[nna])
+                    cut2 <- 0
+                    cut3 <- 0
                     for (i in 1:length(x)){
                       if (is.na(x[i])) next
                       # Apply desirability function

@@ -2,3 +2,4 @@
 
 export(desire_individual)
 export(desire_overall)
+export(desire_plot)

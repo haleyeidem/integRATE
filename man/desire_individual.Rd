@@ -10,11 +10,14 @@ desire_individual(x, desire_type = desire.type, cut_type = cut.type, cut1,
 \arguments{
 \item{x}{Vector of numeric values.}
 
-\item{desire_type}{Class of desirability function to apply (low, high, or extreme).}
+\item{desire_type}{Class of desirability function to apply (low, high, or
+extreme).}
 
-\item{cut_type}{Class of cuts assigned to desirability function (numerical, percentile, or none).}
+\item{cut_type}{Class of cuts assigned to desirability function (numerical,
+percentile, or none).}
 
-\item{cut1, cut2, cut3, cut4}{Cut points where the desirability function changes.}
+\item{cut1, cut2, cut3, cut4}{Cut points where the desirability function
+changes.}
 
 \item{min, max}{Minimum (default = 0) and maximum (default = 1) desirability
 scores.}
