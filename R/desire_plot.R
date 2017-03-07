@@ -14,25 +14,17 @@
 
 desire_plot <- function(x){
 
-  p5 <- ggplot() +
-    geom_point(aes(x = seq(from = 1, to = 1500),
-                   y = data.All$D[1:1500]),
-               size = 3,
-               color = "#A2C669",
-               alpha = 1) +
-    labs(x = "Rank",
-         y = "Overall Desirability") +
-    scale_y_continuous(breaks = seq(0, 0.2, length = 11)) +
-    geom_label(aes(x = seq(1:2),
-                   y = data.All$D[1:2]),
-               label=data.All$Gene[1:2],
-               fill = "white",
-               label.size=0,
-               size=5,
-               fontface=2,
-               hjust=-0.1,
-               vjust=0.5)
+  dat <- x[rev(order(x[,1])),]
 
-  grid.arrange(p5 + theme_classic(), ncol=1)
+  p <- ggplot() +
+    geom_point(aes(x = seq(length(dat[,1])),
+                   y = dat[,1]),
+               size = 2,
+               color = "black",
+               alpha = 0.5) +
+    labs(x = "Rank",
+         y = "Overall Desirability")
+
+  grid.arrange(p + theme_classic(), ncol=1)
 
 }
