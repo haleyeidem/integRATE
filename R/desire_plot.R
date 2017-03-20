@@ -38,8 +38,7 @@ desire_plot <- function(x, plot_type = plot.type){
            y = "Overall Desirability Score") +
       scale_y_continuous(limits = c(0, 1), breaks=seq(0, 1, 0.1)) +
       theme_classic()
-
-    grid.arrange(p + theme_classic(), ncol=1)
+    p
   }
 
   # Plot top genes as well as their overall and individual desirability scores
@@ -78,12 +77,16 @@ desire_plot <- function(x, plot_type = plot.type){
                      value.name = "Individual Rank",
                      variable.name = "Data")
 
+    dat.melt[,3] <- log10(dat.melt[,3])
+
     p2 <- ggplot() +
       geom_line(data = dat.melt,
         aes(
-          x = rep(seq(1,10,1),3),
+          x = rep(seq(1,length(dat[,1]),1),length(dat)-2),
           y = dat.melt[,3],
-          colour = Data)) +
+          colour = variable),
+        size = 1.5,
+        alpha = 0.75) +
       scale_x_continuous(
         breaks = 1:10, labels = c(
           paste('1\n', dat.melt[1,1]),
@@ -96,9 +99,11 @@ desire_plot <- function(x, plot_type = plot.type){
           paste('8\n', dat.melt[8,1]),
           paste('9\n', dat.melt[9,1]),
           paste('10\n', dat.melt[10,1]))) +
-      labs(x = "Overall Desirability Rank", y = "Individual Rank") +
+      labs(x = "Overall Desirability Rank", y = "Individual Rank (log10)") +
       theme_classic() +
-      theme(legend.position="top")
+      theme(legend.position="right") +
+      scale_colour_brewer(type = "qual", palette = "Paired", direction = 1) +
+      scale_y_log10()
 
     grid.arrange(p1, p2)
 

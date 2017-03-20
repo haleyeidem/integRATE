@@ -24,10 +24,8 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
 
   # Set desirability function
   desire.type <- c("low", "l", "high", "h", "extremes", "e")
-  if(!hasArg(desire_type))
-    stop("\ndesire_type should be one of the following: 'low', 'high' or 'extremes'\n\nfor more details see help page ?desire()")
-  if(!is.element(desire_type, desire.type))
-    stop("\ndesire_type should be one of the following: 'low', 'l', 'high', 'h', 'extremes', 'e'")
+  if(!hasArg(desire_type)) stop("\ndesire_type should be one of the following: 'low', 'high' or 'extremes'\n\nfor more details see help page ?desire()")
+  if(!is.element(desire_type, desire.type)) stop("\ndesire_type should be one of the following: 'low', 'l', 'high', 'h', 'extremes', 'e'")
   if(desire_type == "low") desire_type <- "l"
   if(desire_type == "high") desire_type <- "h"
   if(desire_type == "extremes") desire_type <- "e"
@@ -35,8 +33,7 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
   # Set cut types
   cut.type <- c("numerical", "num", "percentile", "per", "none", "no")
   if(!hasArg(cut_type)) cut_type <- "none"
-  if(!is.element(cut_type, cut.type))
-    stop("\ncut_type should be one of the following: 'numerical', 'num', 'percentile', 'per', 'none', 'no'")
+  if(!is.element(cut_type, cut.type)) stop("\ncut_type should be one of the following: 'numerical', 'num', 'percentile', 'per', 'none', 'no'")
   if(cut_type == "none") cut_type <- "no"
   if(cut_type == "numerical") cut_type <- "num"
   if(cut_type == "percentile") cut_type <- "per"
@@ -133,10 +130,10 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                     for (i in 1:length(x)){
                       if (is.na(x[i])) next
                       # Apply desirability function
-                      if (x[i] > cut1 & x[i] < cut2) y[i] <-
-                          ((x[i] - cut2)/(cut1 - cut2))^scale
-                      if (x[i] > cut3 & x[i] < cut4) y[i] <-
-                          ((x[i] - cut3)/(cut4 - cut3))^scale
+                      if (x[i] > cut1 & x[i] < cut2) y[i]
+                      <- ((x[i] - cut2)/(cut1 - cut2))^scale
+                      if (x[i] > cut3 & x[i] < cut4) y[i]
+                      <- ((x[i] - cut3)/(cut4 - cut3))^scale
                       # Override desirability score between and outside cuts
                       if (x[i] <= cut1 | x[i] >= cut4)  y[i] <- 1
                       if (x[i] >= cut2 & x[i] <= cut3) y[i] <- 0
@@ -154,10 +151,10 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                     for (i in 1:length(x)){
                       if (is.na(x[i])) next
                       # Apply desirability function
-                      if (x[i] > per1 & x[i] < per2) y[i] <-
-                          ((x[i] - per2)/(per1 - per2))^scale
-                      if (x[i] > per3 & x[i] < per4) y[i] <-
-                          ((x[i] - per3)/(per4 - per3))^scale
+                      if (x[i] > per1 & x[i] < per2) y[i]
+                      <- ((x[i] - per2)/(per1 - per2))^scale
+                      if (x[i] > per3 & x[i] < per4) y[i]
+                      <- ((x[i] - per3)/(per4 - per3))^scale
                       # Override desirability score between and outside cuts
                       if (x[i] <= per1 | x[i] >= per4)  y[i] <- 1
                       if (x[i] >= per2 & x[i] <= per3) y[i] <- 0
@@ -172,8 +169,10 @@ desire_individual <- function(x, desire_type = desire.type, cut_type = cut.type,
                     for (i in 1:length(x)){
                       if (is.na(x[i])) next
                       # Apply desirability function
-                      if (x[i] > cut1 & x[i] < cut2) y[i] <- ((x[i] - cut2)/(cut1 - cut2))^scale
-                      if (x[i] > cut3 & x[i] < cut4) y[i] <- ((x[i] - cut3)/(cut4 - cut3))^scale
+                      if (x[i] > cut1 & x[i] < cut2) y[i]
+                      <- ((x[i] - cut2)/(cut1 - cut2))^scale
+                      if (x[i] > cut3 & x[i] < cut4) y[i]
+                      <- ((x[i] - cut3)/(cut4 - cut3))^scale
                       # Override desirability score between and outside cuts
                       if (x[i] <= cut1 | x[i] >= cut4)  y[i] <- 1
                       if (x[i] >= cut2 & x[i] <= cut3) y[i] <- 0
