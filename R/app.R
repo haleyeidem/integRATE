@@ -4,6 +4,8 @@ library(shinythemes)
 library(shinydashboard)
 library(DT)
 library(dplyr)
+library(data.table)
+library(shinyFiles)
 
 # server #######################################################################
 
@@ -36,6 +38,20 @@ server <- function(input, output) {
 
   output$data <- DT::renderDataTable(dat())
 
+  output$contents <- renderTable({
+    # input$file1 will be NULL initially. After the user selects
+    # and uploads a file, it will be a data frame with 'name',
+    # 'size', 'type', and 'datapath' columns. The 'datapath'
+    # column will contain the local filenames where the data can
+    # be found.
+    inFile <- input$file1
+
+    if (is.null(inFile))
+      return(NULL)
+
+    read.csv(inFile$datapath, header = input$header)
+  })
+
 }
 
 # ui ###########################################################################
@@ -63,30 +79,33 @@ ui <- dashboardPage(skin = "black",
 
   dashboardBody(
     tabItems(
-      tabItem(tabName = "home"
-
+      tabItem(tabName = "home",
+              fluidRow(
+                box(width = 12
+                )
+              )
       ),
 
       tabItem(tabName = "data",
 
               fluidRow(
                 box(width = 12,
-                    title = "Add New Data Set",
-                    fileInput("files", "", multiple = TRUE,
-                              accept = c('.csv'))
+                    tabsetPanel(
+                      tabPanel("Data summary",
+                               DT::dataTableOutput('metadata'),
+                               tableOutput('contents')
+                      ),
+                      tabPanel("Add pre-uploaded data",
+                               DT::dataTableOutput('data')
+                      ),
+                      tabPanel("Add new data",
+                               fileInput('file1', 'Choose CSV File',multiple = TRUE,
+                                         accept=c('text/csv',
+                                                  'text/comma-separated-values,text/plain',
+                                                  '.csv'))
+                      )
+                    )
                 )
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    title = "Data Summary",
-                    DT::dataTableOutput('metadata'))
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    title = "All Data",
-                    DT::dataTableOutput('data'))
               )
 
       ),
