@@ -63,17 +63,8 @@ ui <- dashboardPage(skin = "black",
 
   dashboardBody(
     tabItems(
-      tabItem(tabName = "home",
+      tabItem(tabName = "home"
 
-              fluidRow(
-                box(width = 12,
-                    title = "What is integRATE?")
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    title = "How do I use integRATE?")
-              )
       ),
 
       tabItem(tabName = "data",
@@ -118,7 +109,17 @@ ui <- dashboardPage(skin = "black",
               )
       ),
 
-      tabItem(tabName = "faq"
+      tabItem(tabName = "faq",
+
+              fluidRow(
+                box(width = 12,
+                    title = "What is integRATE?")
+              ),
+
+              fluidRow(
+                box(width = 12,
+                    title = "How do I use integRATE?")
+              )
 
       )
 
