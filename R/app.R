@@ -4,6 +4,7 @@ library(shinythemes)
 library(shinydashboard)
 library(DT)
 library(dplyr)
+library(plyr)
 library(data.table)
 library(shinyFiles)
 
@@ -21,7 +22,8 @@ server <- function(input, output) {
 
   output$metadata <- DT::renderDataTable(meta(),
                                          options = list(pageLength = 5,
-                                                        dom = "tip"),
+                                                        dom = "tip"
+                                                        ),
                                          rownames = FALSE)
 
   dat <- reactive({
@@ -30,27 +32,28 @@ server <- function(input, output) {
       return(NULL)
     }
     file_names <- as.list(inFile$datapath)
-    files <- lapply(file_names, read.csv, header=TRUE)
+    files <- lapply(file_names, fread, header=TRUE)
     # can access individual files with files[[i]]
     df <- join_all(files, by="Gene", type="full")
     df
   })
 
-  output$data <- DT::renderDataTable(dat())
-
-  output$contents <- renderTable({
-    # input$file1 will be NULL initially. After the user selects
-    # and uploads a file, it will be a data frame with 'name',
-    # 'size', 'type', and 'datapath' columns. The 'datapath'
-    # column will contain the local filenames where the data can
-    # be found.
-    inFile <- input$file1
-
-    if (is.null(inFile))
-      return(NULL)
-
-    read.csv(inFile$datapath, header = input$header)
-  })
+  output$data <- DT::renderDataTable(dat(),
+                                     extensions = list('FixedColumns' = NULL,
+                                                       'ColReorder' = NULL,
+                                                       'FixedHeader' = NULL,
+                                                       'Scroller' = NULL
+                                                       ),
+                                     options = list(dom = "iflrtpRCB",
+                                                    fixedColumns = list(leftColumns = 1),
+                                                    scrollX = TRUE,
+                                                    scrollY = 1000,
+                                                    scroller = TRUE,
+                                                    deferRender = TRUE,
+                                                    autoWidth=TRUE,
+                                                    colReorder = TRUE
+                                                    ),
+                                     rownames = FALSE)
 
 }
 
@@ -90,24 +93,21 @@ ui <- dashboardPage(skin = "black",
 
               fluidRow(
                 box(width = 12,
-                    tabsetPanel(
-                      tabPanel("Data summary",
-                               DT::dataTableOutput('metadata'),
-                               tableOutput('contents')
-                      ),
-                      tabPanel("Add pre-uploaded data",
-                               DT::dataTableOutput('data')
-                      ),
-                      tabPanel("Add new data",
-                               fileInput('file1', 'Choose CSV File',multiple = TRUE,
-                                         accept=c('text/csv',
-                                                  'text/comma-separated-values,text/plain',
-                                                  '.csv'))
-                      )
-                    )
+                    title = "Add data",
+                    fileInput("files",
+                              label = "",
+                              multiple = TRUE
+                    ),
+                    DT::dataTableOutput('metadata')
+                )
+              ),
+
+              fluidRow(
+                box(width = 12,
+                    title = "Data summary",
+                    DT::dataTableOutput('data')
                 )
               )
-
       ),
 
       tabItem(tabName = "analyze",
