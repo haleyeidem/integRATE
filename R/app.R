@@ -45,7 +45,8 @@ server <- function(input, output) {
                                                        'Scroller' = NULL
                                                        ),
                                      options = list(dom = "iflrtpRCB",
-                                                    fixedColumns = list(leftColumns = 1),
+                                                    fixedColumns =
+                                                      list(leftColumns = 1),
                                                     scrollX = TRUE,
                                                     scrollY = 1000,
                                                     scroller = TRUE,
@@ -61,7 +62,9 @@ server <- function(input, output) {
 
 ui <- dashboardPage(skin = "black",
 
-  dashboardHeader(title = tags$strong("integRATE")),
+  dashboardHeader(title = tags$img(src='integRATE_colored.pdf',
+                                   align = "left",
+                                   width = '100%')),
 
   dashboardSidebar(
     sidebarMenu(
@@ -81,10 +84,52 @@ ui <- dashboardPage(skin = "black",
   ),
 
   dashboardBody(
+
+    tags$head(tags$style(HTML('
+      .skin-black .main-sidebar {
+                              background-color: #556370;
+                              }
+                              .skin-black .sidebar-menu>li.active>a, .skin-black .sidebar-menu>li:hover>a {
+                              background-color: #556370;
+                              }
+                              '))),
+
+    tags$style(HTML("
+
+
+
+                    .box.box-solid.box-primary>.box-header {
+                    color:#ffffff;
+                    background:#556370
+                    }
+
+                    .box.box-solid.box-success>.box-header {
+                    color:#ffffff;
+                    background:#4ecdc4
+                    }
+
+                    .box.box-solid.box-info>.box-header {
+                    color:#ffffff;
+                    background:#c7f465
+                    }
+
+                    .box.box-solid.box-warning>.box-header {
+                    color:#ffffff;
+                    background:#ff6b6b
+                    }
+
+                    .box.box-solid.box-danger>.box-header {
+                    color:#ffffff;
+                    background:#c54d57
+                    }
+
+                    ")),
+
     tabItems(
       tabItem(tabName = "home",
               fluidRow(
-                box(width = 12
+                box(width = 12,
+                    solidHeader = TRUE
                 )
               )
       ),
@@ -93,6 +138,8 @@ ui <- dashboardPage(skin = "black",
 
               fluidRow(
                 box(width = 12,
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
                     title = "Add data",
                     fileInput("files",
                               label = "",
@@ -104,6 +151,8 @@ ui <- dashboardPage(skin = "black",
 
               fluidRow(
                 box(width = 12,
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
                     title = "Data summary",
                     DT::dataTableOutput('data')
                 )
@@ -114,16 +163,19 @@ ui <- dashboardPage(skin = "black",
 
               fluidRow(
                 box(width = 12,
+                    solidHeader = TRUE,
                     title = "Desirability Function Parameters")
               ),
 
               fluidRow(
                 box(width = 12,
+                    solidHeader = TRUE,
                     title = "Plots")
               ),
 
               fluidRow(
                 box(width = 12,
+                    solidHeader = TRUE,
                     title = "Data Download")
               )
       ),
@@ -132,12 +184,20 @@ ui <- dashboardPage(skin = "black",
 
               fluidRow(
                 box(width = 12,
-                    title = "What is integRATE?")
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    title = "What is integRATE?"
+                )
               ),
 
               fluidRow(
                 box(width = 12,
-                    title = "How do I use integRATE?")
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    title = "How do I use integRATE?"
+                )
               )
 
       )
