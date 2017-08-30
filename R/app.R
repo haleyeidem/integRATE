@@ -8,9 +8,13 @@ library(plyr)
 library(data.table)
 library(shinyFiles)
 
+source('desire_individual.R')
+source('desire_overall.R')
+source('desire_plot.R')
+
 # server #######################################################################
 
-server <- function(input, output) {
+server <- function(input, output, session) {
 
   meta <- reactive({
     inFile <- input$files
@@ -106,6 +110,11 @@ server <- function(input, output) {
                                            ),
                                            rownames = FALSE)
 
+  observeEvent(input$analyze, {
+    session$sendCustomMessage(type = 'testmessage',
+                              message = 'Thank you for clicking')
+  })
+
 }
 
 # ui ###########################################################################
@@ -184,17 +193,16 @@ ui <- dashboardPage(skin = "black",
                     tabsetPanel(
                       tabPanel(
                         title = "Individual parameters",
-                        DT::dataTableOutput('individual'),
-                        br(),
-                        actionButton("analyze_individual", "Analyze")
+                        DT::dataTableOutput('individual')
                       ),
                       tabPanel(
                         title = "Overall parameters",
-                        DT::dataTableOutput('overall'),
-                        br(),
-                        actionButton("analyze_overall", "Analyze")
-                      )
-                    )
+                        DT::dataTableOutput('overall')
+                      ),
+                      hr(),
+                      actionButton("analyze", "Analyze")
+                    ),
+                    verbatimTextOutput("test")
                 )
               ),
 
@@ -224,7 +232,7 @@ ui <- dashboardPage(skin = "black",
                     solidHeader = TRUE,
                     collapsible = TRUE,
                     collapsed = TRUE,
-                    title = "What is integRATE?"
+                    title = "What IS integRATE?"
                 )
               ),
 
@@ -233,7 +241,34 @@ ui <- dashboardPage(skin = "black",
                     solidHeader = TRUE,
                     collapsible = TRUE,
                     collapsed = TRUE,
-                    title = "How do I use integRATE?"
+                    title = "What ISN'T integRATE?"
+                )
+              ),
+
+              fluidRow(
+                box(width = 12,
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    title = "When should I use integRATE?"
+                )
+              ),
+
+              fluidRow(
+                box(width = 12,
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    title = "How should my data be organized?"
+                )
+              ),
+
+              fluidRow(
+                box(width = 12,
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    title = "Where can I find more information?"
                 )
               )
 
@@ -244,4 +279,4 @@ ui <- dashboardPage(skin = "black",
 
 )
 
-shinyApp(ui = ui, server = server)
+shinyApp(ui, server)
