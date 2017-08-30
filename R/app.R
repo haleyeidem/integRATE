@@ -21,8 +21,11 @@ server <- function(input, output) {
   })
 
   output$metadata <- DT::renderDataTable(meta(),
-                                         options = list(pageLength = 5,
-                                                        dom = "tip"
+                                         extensions = list('FixedHeader' = NULL
+                                                           ),
+                                         options = list(scrollY = 200,
+                                                        autoWidth=TRUE,
+                                                        dom = "t"
                                                         ),
                                          rownames = FALSE)
 
@@ -48,7 +51,7 @@ server <- function(input, output) {
                                                     fixedColumns =
                                                       list(leftColumns = 1),
                                                     scrollX = TRUE,
-                                                    scrollY = 1000,
+                                                    scrollY = 500,
                                                     scroller = TRUE,
                                                     deferRender = TRUE,
                                                     autoWidth=TRUE,
@@ -56,13 +59,60 @@ server <- function(input, output) {
                                                     ),
                                      rownames = FALSE)
 
+  indiv <- reactive({
+    inFile <- input$files
+    if (is.null(inFile)) {
+      return(NULL)
+    }
+    num <- ncol(dat())-1
+    variables <- c(colnames(dat()[,-1]))
+    df <- data.frame('Data' = variables,
+                     'Function' = numeric(num),
+                     'Cuts' = numeric(num),
+                     'Scale' = numeric(num),
+                     'Min' = numeric(num),
+                     'Max' = numeric(num))
+    df
+  })
+
+  output$individual <- DT::renderDataTable(indiv(),
+                                           extensions = list('FixedHeader' = NULL
+                                           ),
+                                           options = list(scrollY = 200,
+                                                          autoWidth=TRUE,
+                                                          dom = "t"
+                                           ),
+                                           rownames = FALSE)
+
+  over <- reactive({
+    inFile <- input$files
+    if (is.null(inFile)) {
+      return(NULL)
+    }
+    names <- c(inFile$name)
+    num <- length(names)
+    df <- data.frame('Data' = names,
+                     'Weights' = numeric(num)
+                     )
+    df
+  })
+
+  output$overall <- DT::renderDataTable(over(),
+                                           extensions = list('FixedHeader' = NULL
+                                           ),
+                                           options = list(scrollY = 200,
+                                                          autoWidth=TRUE,
+                                                          dom = "t"
+                                           ),
+                                           rownames = FALSE)
+
 }
 
 # ui ###########################################################################
 
 ui <- dashboardPage(skin = "black",
 
-  dashboardHeader(title = tags$img(src='integRATE_colored.pdf',
+  dashboardHeader(title = tags$img(src='integRATE_image.pdf',
                                    align = "left",
                                    width = '100%')),
 
@@ -84,52 +134,18 @@ ui <- dashboardPage(skin = "black",
   ),
 
   dashboardBody(
-
-    tags$head(tags$style(HTML('
-      .skin-black .main-sidebar {
-                              background-color: #556370;
-                              }
-                              .skin-black .sidebar-menu>li.active>a, .skin-black .sidebar-menu>li:hover>a {
-                              background-color: #556370;
-                              }
-                              '))),
-
-    tags$style(HTML("
-
-
-
-                    .box.box-solid.box-primary>.box-header {
-                    color:#ffffff;
-                    background:#556370
-                    }
-
-                    .box.box-solid.box-success>.box-header {
-                    color:#ffffff;
-                    background:#4ecdc4
-                    }
-
-                    .box.box-solid.box-info>.box-header {
-                    color:#ffffff;
-                    background:#c7f465
-                    }
-
-                    .box.box-solid.box-warning>.box-header {
-                    color:#ffffff;
-                    background:#ff6b6b
-                    }
-
-                    .box.box-solid.box-danger>.box-header {
-                    color:#ffffff;
-                    background:#c54d57
-                    }
-
-                    ")),
-
     tabItems(
       tabItem(tabName = "home",
               fluidRow(
                 box(width = 12,
-                    solidHeader = TRUE
+                    solidHeader = TRUE,
+                    title = "Welcome to integRATE!",
+                    tags$ul(
+                      tags$li("integRATE is a tool based on desirability designed for the integration of heterogeneous 'omics data and prioritization of candidate genes"),
+                      tags$li("Start by adding data for integration"),
+                      tags$li("Then analyze that data with custom desirability functions"),
+                      tags$li("Use the ranked gene list output to guide further research and functional validation")
+                    )
                 )
               )
       ),
@@ -164,19 +180,40 @@ ui <- dashboardPage(skin = "black",
               fluidRow(
                 box(width = 12,
                     solidHeader = TRUE,
-                    title = "Desirability Function Parameters")
+                    title = "Customize desirability function analysis",
+                    tabsetPanel(
+                      tabPanel(
+                        title = "Individual parameters",
+                        DT::dataTableOutput('individual'),
+                        br(),
+                        actionButton("analyze_individual", "Analyze")
+                      ),
+                      tabPanel(
+                        title = "Overall parameters",
+                        DT::dataTableOutput('overall'),
+                        br(),
+                        actionButton("analyze_overall", "Analyze")
+                      )
+                    )
+                )
               ),
 
               fluidRow(
                 box(width = 12,
                     solidHeader = TRUE,
-                    title = "Plots")
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    solidHeader = TRUE,
-                    title = "Data Download")
+                    title = "Plot",
+                    tabsetPanel(
+                      tabPanel(
+                        title = "Overall desirability"
+                      ),
+                      tabPanel(
+                        title = "Top candidates"
+                      ),
+                      tabPanel(
+                        title = "Clustered candidates"
+                      )
+                    )
+                )
               )
       ),
 
