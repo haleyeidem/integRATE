@@ -38,6 +38,9 @@ desire_plot <- function(x, plot_type = plot.type){
            y = "Overall Desirability Score") +
       scale_y_continuous(limits = c(0, 1), breaks=seq(0, 1, 0.1)) +
       theme_classic()
+
+    grid.arrange(p)
+
     p
   }
 
@@ -48,7 +51,7 @@ desire_plot <- function(x, plot_type = plot.type){
       geom_point(
         aes(
           x = seq(1,10,1),
-          y = dat[,2][1:10]),
+          y = dat[1:10,2]),
         size = 5,
         color = "black",
         alpha = 1) +
