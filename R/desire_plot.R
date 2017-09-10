@@ -71,8 +71,9 @@ desire_plot <- function(x, plot_type = plot.type){
 
     # Reformat data to represent data type instead of study
     top <- dat[1:10,]
+    colnames(top)[2] <- "Overall"
 
-    top.melt <- melt(top[,-2],
+    top.melt <- melt(top,
                      id.vars = c("Gene"),
                      value.name = c("Desirability"),
                      variable.name = c("Type"))
@@ -80,13 +81,13 @@ desire_plot <- function(x, plot_type = plot.type){
     top.melt[2] <- gsub(".*\\((.*)\\).*", "\\1", top.melt[,2])
 
     p3 <- ggplot() +
-      geom_point(
+      geom_point(position=position_dodge(width = .1),
         aes(
-          x = rep(seq(1,length(top[,1]),1),length(top)-2),
+          x = rep(seq(1,length(top[,1]),1),length(top)-1),
           y = top.melt[,3],
           colour = top.melt$Type),
-        size=3,
-        alpha=0.75) +
+        size=2,
+        alpha=1) +
       scale_x_continuous(
         breaks = 1:10, labels = c(
           paste('1\n', top.melt[1,1]),
@@ -160,7 +161,9 @@ desire_plot <- function(x, plot_type = plot.type){
       scale_colour_brewer(name = "Study", type = "qual", palette = "Paired", direction = 1) +
       scale_y_continuous(trans=reverselog_trans(10), breaks = c(0, 0.0005, 0.01, 1))
 
-    grid.arrange(p2, p3, p4, ncol = 1)
+    grid.arrange(p2)
+    grid.arrange(p3)
+    grid.arrange(p4)
 
   }
 
