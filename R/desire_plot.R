@@ -15,156 +15,165 @@
 desire_plot <- function(x, plot_type = plot.type){
 
   # Set plot type
-  plot.type <- c("overall", "o", "top", "t")
+  plot.type <- c("overall", "top", "type", "study", "all")
   if(!hasArg(plot_type))
-    stop("\nplot_type should be one of the following: 'overall' or 'top'\n\nfor more details see help page ?desire()")
+    stop("\nplot_type should be one of the following: 'overall' or 'top' or 'type' or 'study' or 'all'\n\nfor more details see help page ?desire()")
   if(!is.element(plot_type, plot.type))
-    stop("\nplot_type should be one of the following: 'overall' or 'top'\n\nfor more details see help page ?desire()")
+    stop("\nplot_type should be one of the following: 'overall' or 'top' or 'type' or 'study' or 'all'\n\nfor more details see help page ?desire()")
   if(plot_type == "overall") plot_type <- "o"
-  if(plot_type == "top") desire_type <- "t"
+  if(plot_type == "top") plot_type <- "t"
+  if(plot_type == "type") plot_type <- "ty"
+  if(plot_type == "study") plot_type <- "s"
+  if(plot_type == "all") plot_type <- "a"
 
   # Sort data by overall desirability score
   dat <- x[rev(order(x[,2])),]
 
   # Plot all genes and their overall desirability scores
-  if (plot_type == "o") {
-    p1 <- ggplot() +
-      geom_point(aes(x = seq(length(dat[,2])),
-                     y = dat[,2]),
-                 size = 2,
-                 color = "black",
-                 alpha = 0.5) +
-      labs(x = "Rank",
-           y = "Overall Desirability Score") +
-      scale_y_continuous(limits = c(0, 1), breaks=seq(0, 1, 0.1)) +
-      theme_classic()
+  overall <- dat
+  p1 <- ggplot() +
+    geom_point(aes(x = seq(length(overall[,2])),
+                   y = overall[,2]),
+               size = 2,
+               color = "black",
+               alpha = 0.5) +
+    labs(x = "Rank",
+         y = "Overall Desirability Score") +
+    scale_y_continuous(limits = c(0, 1), breaks=seq(0, 1, 0.1)) +
+    theme_classic()
 
-    grid.arrange(p1)
+  # Plot top genes by overall desirability
+  top <- dat
+  p2 <- ggplot() +
+    geom_point(
+      aes(
+        x = seq(1,10,1),
+        y = top[1:10,2]),
+      size = 2,
+      color = "black",
+      alpha = 1) +
+    scale_x_continuous(
+      breaks = 1:10, labels = c(
+        paste('1\n', top[1,1]),
+        paste('2\n', top[2,1]),
+        paste('3\n', top[3,1]),
+        paste('4\n', top[4,1]),
+        paste('5\n', top[5,1]),
+        paste('6\n', top[6,1]),
+        paste('7\n', top[7,1]),
+        paste('8\n', top[8,1]),
+        paste('9\n', top[9,1]),
+        paste('10\n', top[10,1]))) +
+    labs(x = "Rank", y = "Overall Desirability Score") +
+    theme_classic()
 
+  # Reformat data to represent data type instead of study
+  type <- dat[1:10,]
+  colnames(type)[2] <- "Overall"
+
+  type.melt <- melt(type,
+                   id.vars = c("Gene"),
+                   value.name = c("Desirability"),
+                   variable.name = c("Type"))
+
+  type.melt[2] <- gsub(".*\\((.*)\\).*", "\\1", type.melt[,2])
+
+  p3 <- ggplot() +
+    geom_point(position=position_dodge(width = .1),
+               aes(
+                 x = rep(seq(1,length(type[,1]),1),length(type)-1),
+                 y = type.melt[,3],
+                 colour = type.melt$Type),
+               size=2,
+               alpha=1) +
+    scale_x_continuous(
+      breaks = 1:10, labels = c(
+        paste('1\n', type.melt[1,1]),
+        paste('2\n', type.melt[2,1]),
+        paste('3\n', type.melt[3,1]),
+        paste('4\n', type.melt[4,1]),
+        paste('5\n', type.melt[5,1]),
+        paste('6\n', type.melt[6,1]),
+        paste('7\n', type.melt[7,1]),
+        paste('8\n', type.melt[8,1]),
+        paste('9\n', type.melt[9,1]),
+        paste('10\n', type.melt[10,1]))) +
+    labs(x = "Rank", y = "Overall Desirability Score") +
+    theme_classic() +
+    theme(legend.position="right") +
+    scale_colour_brewer(name = "Data Type", type = "qual", palette = "Paired", direction = 1)
+
+  # Plot ranks from individual desirability scores
+  study <- dat
+  study[,3:length(study)] <- lapply(-study[,3:length(study)],
+                                rank,
+                                ties.method = 'min')
+
+  # Calculate number of unique ranks in each study
+  nums <- c()
+  for (i in seq(length(study))) {
+    nums[i] <- length(unique(study[[i]]))
   }
 
-  # Plot top genes as well as their overall and individual desirability scores
+  # Normalize ranks by number of unique ranks in each study
+  study <- study[1:10,]
+  study[,3:length(study)] <- sweep(study[,3:length(study)],2,nums[3:length(study)],"/")
+  study.melt <- melt(study[,-2],
+                   id.vars = c("Gene"),
+                   value.name = c("Individual Rank"),
+                   variable.name = c("Data"))
+
+  # Custom reverse log scale for y-axis
+  reverselog_trans <- function(base = exp(1)) {
+    trans <- function(x) -log(x, base)
+    inv <- function(x) base^(-x)
+    trans_new(paste0("reverselog-", format(base)), trans, inv,
+              log_breaks(base = base),
+              domain = c(1e-100, Inf))
+  }
+
+  p4 <- ggplot() +
+    geom_point(data = study.melt,
+               position=position_dodge(width = .6),
+               aes(
+                 x = rep(seq(1,length(study[,1]),1),length(study)-2),
+                 y = study.melt[,3],
+                 colour = study.melt$Data),
+               size = 2,
+               alpha = 1,
+               inherit.aes=FALSE) +
+    scale_x_continuous(
+      breaks = 1:10, labels = c(
+        paste('1\n', study.melt[1,1]),
+        paste('2\n', study.melt[2,1]),
+        paste('3\n', study.melt[3,1]),
+        paste('4\n', study.melt[4,1]),
+        paste('5\n', study.melt[5,1]),
+        paste('6\n', study.melt[6,1]),
+        paste('7\n', study.melt[7,1]),
+        paste('8\n', study.melt[8,1]),
+        paste('9\n', study.melt[9,1]),
+        paste('10\n', study.melt[10,1]))) +
+    labs(x = "Rank", y = "Relative Individual Rank (log10)") +
+    theme_classic() +
+    theme(legend.position="right") +
+    scale_colour_brewer(name = "Study", type = "qual", palette = "Paired", direction = 1) +
+    scale_y_continuous(trans=reverselog_trans(10), breaks = c(0, 0.0005, 0.01, 1))
+
+  if (plot_type == "o") {
+    grid.arrange(p1)
+  }
   if (plot_type == "t") {
-    # Plot top genes by overall desirability
-    p2 <- ggplot() +
-      geom_point(
-        aes(
-          x = seq(1,10,1),
-          y = dat[1:10,2]),
-        size = 5,
-        color = "black",
-        alpha = 1) +
-      scale_x_continuous(
-        breaks = 1:10, labels = c(
-          paste('1\n', dat[1,1]),
-          paste('2\n', dat[2,1]),
-          paste('3\n', dat[3,1]),
-          paste('4\n', dat[4,1]),
-          paste('5\n', dat[5,1]),
-          paste('6\n', dat[6,1]),
-          paste('7\n', dat[7,1]),
-          paste('8\n', dat[8,1]),
-          paste('9\n', dat[9,1]),
-          paste('10\n', dat[10,1]))) +
-      labs(x = "Overall Desirability Rank", y = "Overall Desirability Score") +
-      theme_classic()
-
-    # Reformat data to represent data type instead of study
-    top <- dat[1:10,]
-    colnames(top)[2] <- "Overall"
-
-    top.melt <- melt(top,
-                     id.vars = c("Gene"),
-                     value.name = c("Desirability"),
-                     variable.name = c("Type"))
-
-    top.melt[2] <- gsub(".*\\((.*)\\).*", "\\1", top.melt[,2])
-
-    p3 <- ggplot() +
-      geom_point(position=position_dodge(width = .1),
-        aes(
-          x = rep(seq(1,length(top[,1]),1),length(top)-1),
-          y = top.melt[,3],
-          colour = top.melt$Type),
-        size=2,
-        alpha=1) +
-      scale_x_continuous(
-        breaks = 1:10, labels = c(
-          paste('1\n', top.melt[1,1]),
-          paste('2\n', top.melt[2,1]),
-          paste('3\n', top.melt[3,1]),
-          paste('4\n', top.melt[4,1]),
-          paste('5\n', top.melt[5,1]),
-          paste('6\n', top.melt[6,1]),
-          paste('7\n', top.melt[7,1]),
-          paste('8\n', top.melt[8,1]),
-          paste('9\n', top.melt[9,1]),
-          paste('10\n', top.melt[10,1]))) +
-      labs(x = "Overall Desirability Rank", y = "Overall Desirability Score") +
-      theme_classic() +
-      theme(legend.position="right") +
-      scale_colour_brewer(name = "Data Type", type = "qual", palette = "Paired", direction = 1)
-
-    # Plot ranks from individual desirability scores
-    dat[,3:length(dat)] <- lapply(-dat[,3:length(dat)],
-                                  rank,
-                                  ties.method = 'min')
-
-    # Calculate number of unique ranks in each study
-    nums <- c()
-    for (i in seq(length(dat))) {
-      nums[i] <- length(unique(dat[[i]]))
-    }
-
-    # Normalize ranks by number of unique ranks in each study
-    dat <- dat[1:10,]
-    dat[,3:length(dat)] <- sweep(dat[,3:length(dat)],2,nums[3:length(dat)],"/")
-    dat.melt <- melt(dat[,-2],
-                     id.vars = c("Gene"),
-                     value.name = c("Individual Rank"),
-                     variable.name = c("Data"))
-
-    # Custom reverse log scale for y-axis
-    reverselog_trans <- function(base = exp(1)) {
-      trans <- function(x) -log(x, base)
-      inv <- function(x) base^(-x)
-      trans_new(paste0("reverselog-", format(base)), trans, inv,
-                log_breaks(base = base),
-                domain = c(1e-100, Inf))
-    }
-
-    p4 <- ggplot() +
-      geom_point(data = dat.melt,
-                 position=position_dodge(width = .6),
-        aes(
-          x = rep(seq(1,length(dat[,1]),1),length(dat)-2),
-          y = dat.melt[,3],
-          colour = dat.melt$Data),
-        size = 2,
-        alpha = 1,
-        inherit.aes=FALSE) +
-      scale_x_continuous(
-        breaks = 1:10, labels = c(
-          paste('1\n', dat.melt[1,1]),
-          paste('2\n', dat.melt[2,1]),
-          paste('3\n', dat.melt[3,1]),
-          paste('4\n', dat.melt[4,1]),
-          paste('5\n', dat.melt[5,1]),
-          paste('6\n', dat.melt[6,1]),
-          paste('7\n', dat.melt[7,1]),
-          paste('8\n', dat.melt[8,1]),
-          paste('9\n', dat.melt[9,1]),
-          paste('10\n', dat.melt[10,1]))) +
-      labs(x = "Overall Desirability Rank", y = "Relative Individual Rank (log10)") +
-      theme_classic() +
-      theme(legend.position="right") +
-      scale_colour_brewer(name = "Study", type = "qual", palette = "Paired", direction = 1) +
-      scale_y_continuous(trans=reverselog_trans(10), breaks = c(0, 0.0005, 0.01, 1))
-
     grid.arrange(p2)
+  }
+  if (plot_type == "ty") {
     grid.arrange(p3)
+  }
+  if (plot_type == "s") {
     grid.arrange(p4)
-
+  }
+  if (plot_type == "a") {
+    grid.arrange(p1, p2, p3, p4)
   }
 
 }
