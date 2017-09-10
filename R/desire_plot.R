@@ -28,7 +28,7 @@ desire_plot <- function(x, plot_type = plot.type){
 
   # Plot all genes and their overall desirability scores
   if (plot_type == "o") {
-    p <- ggplot() +
+    p1 <- ggplot() +
       geom_point(aes(x = seq(length(dat[,2])),
                      y = dat[,2]),
                  size = 2,
@@ -39,15 +39,14 @@ desire_plot <- function(x, plot_type = plot.type){
       scale_y_continuous(limits = c(0, 1), breaks=seq(0, 1, 0.1)) +
       theme_classic()
 
-    grid.arrange(p)
+    grid.arrange(p1)
 
-    p
   }
 
   # Plot top genes as well as their overall and individual desirability scores
   if (plot_type == "t") {
     # Plot top genes by overall desirability
-    p1 <- ggplot() +
+    p2 <- ggplot() +
       geom_point(
         aes(
           x = seq(1,10,1),
@@ -70,6 +69,22 @@ desire_plot <- function(x, plot_type = plot.type){
       labs(x = "Overall Desirability Rank", y = "Overall Desirability Score") +
       theme_classic()
 
+    # Reformat data to represent data type instead of study
+
+
+    p3 <- ggplot() +
+      geom_point(
+        aes(x=new$Gene,
+            y=new$Desirability,
+            color=new$Type),
+        size=3,
+        alpha=0.75) +
+      geom_point() +
+      theme_classic() +
+      theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1)) +
+      labs(x = "Gene", y = "Desirability Score") +
+      scale_colour_manual(values=c("#53c8ed", "#92c747", "#f2c100", "#d50f67"))
+
     # Plot ranks from individual desirability scores
     dat[,3:length(dat)] <- lapply(-dat[,3:length(dat)],
                                   rank,
@@ -81,6 +96,7 @@ desire_plot <- function(x, plot_type = plot.type){
       nums[i] <- length(unique(dat[[i]]))
     }
 
+    # Normalize ranks by number of unique ranks in each study
     dat <- dat[1:10,]
     dat[,3:length(dat)] <- sweep(dat[,3:length(dat)],2,nums[3:length(dat)],"/")
     dat.melt <- melt(dat[,-2],
@@ -88,14 +104,24 @@ desire_plot <- function(x, plot_type = plot.type){
                      value.name = c("Individual Rank"),
                      variable.name = c("Data"))
 
-    p2 <- ggplot() +
-      geom_line(data = dat.melt,
+    # Custom reverse log scale for y-axis
+    reverselog_trans <- function(base = exp(1)) {
+      trans <- function(x) -log(x, base)
+      inv <- function(x) base^(-x)
+      trans_new(paste0("reverselog-", format(base)), trans, inv,
+                log_breaks(base = base),
+                domain = c(1e-100, Inf))
+    }
+
+    p4 <- ggplot() +
+      geom_point(data = dat.melt,
+                 position=position_dodge(width = .6),
         aes(
           x = rep(seq(1,length(dat[,1]),1),length(dat)-2),
           y = dat.melt[,3],
           colour = dat.melt$Data),
-        size = 1.5,
-        alpha = 0.75,
+        size = 2,
+        alpha = 1,
         inherit.aes=FALSE) +
       scale_x_continuous(
         breaks = 1:10, labels = c(
@@ -113,9 +139,9 @@ desire_plot <- function(x, plot_type = plot.type){
       theme_classic() +
       theme(legend.position="right") +
       scale_colour_brewer(name = "Study", type = "qual", palette = "Paired", direction = 1) +
-      scale_y_log10()
+      scale_y_continuous(trans=reverselog_trans(10), breaks = c(0, 0.0005, 0.01, 1))
 
-    grid.arrange(p1, p2)
+    grid.arrange(p2, p3, p4, ncol = 1)
 
   }
 
