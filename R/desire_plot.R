@@ -70,20 +70,39 @@ desire_plot <- function(x, plot_type = plot.type){
       theme_classic()
 
     # Reformat data to represent data type instead of study
+    top <- dat[1:10,]
 
+    top.melt <- melt(top[,-2],
+                     id.vars = c("Gene"),
+                     value.name = c("Desirability"),
+                     variable.name = c("Type"))
+
+    top.melt[2] <- gsub(".*\\((.*)\\).*", "\\1", top.melt[,2])
 
     p3 <- ggplot() +
       geom_point(
-        aes(x=new$Gene,
-            y=new$Desirability,
-            color=new$Type),
+        aes(
+          x = rep(seq(1,length(top[,1]),1),length(top)-2),
+          y = top.melt[,3],
+          colour = top.melt$Type),
         size=3,
         alpha=0.75) +
-      geom_point() +
+      scale_x_continuous(
+        breaks = 1:10, labels = c(
+          paste('1\n', top.melt[1,1]),
+          paste('2\n', top.melt[2,1]),
+          paste('3\n', top.melt[3,1]),
+          paste('4\n', top.melt[4,1]),
+          paste('5\n', top.melt[5,1]),
+          paste('6\n', top.melt[6,1]),
+          paste('7\n', top.melt[7,1]),
+          paste('8\n', top.melt[8,1]),
+          paste('9\n', top.melt[9,1]),
+          paste('10\n', top.melt[10,1]))) +
+      labs(x = "Overall Desirability Rank", y = "Overall Desirability Score") +
       theme_classic() +
-      theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1)) +
-      labs(x = "Gene", y = "Desirability Score") +
-      scale_colour_manual(values=c("#53c8ed", "#92c747", "#f2c100", "#d50f67"))
+      theme(legend.position="right") +
+      scale_colour_brewer(name = "Data Type", type = "qual", palette = "Paired", direction = 1)
 
     # Plot ranks from individual desirability scores
     dat[,3:length(dat)] <- lapply(-dat[,3:length(dat)],
