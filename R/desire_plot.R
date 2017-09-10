@@ -161,19 +161,22 @@ desire_plot <- function(x, plot_type = plot.type){
     scale_y_continuous(trans=reverselog_trans(10), breaks = c(0, 0.0005, 0.01, 1))
 
   if (plot_type == "o") {
-    grid.arrange(p1)
+    print(p1)
   }
   if (plot_type == "t") {
-    grid.arrange(p2)
+    print(p2)
   }
   if (plot_type == "ty") {
-    grid.arrange(p3)
+    print(p3)
   }
   if (plot_type == "s") {
-    grid.arrange(p4)
+    print(p4)
   }
   if (plot_type == "a") {
-    grid.arrange(p1, p2, p3, p4)
+    print(p1)
+    print(p2)
+    print(p3)
+    print(p4)
   }
 
 }
