@@ -173,10 +173,7 @@ desire_plot <- function(x, plot_type = plot.type){
     print(p4)
   }
   if (plot_type == "a") {
-    print(p1)
-    print(p2)
-    print(p3)
-    print(p4)
+    plot_grid(p3, p4, align = "v", ncol = 1, axis = "lrb")
   }
 
 }
