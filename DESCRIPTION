@@ -23,7 +23,8 @@ Depends:
 Imports:
     cowplot,
     ggplot2,
-    reshape2
+    reshape2,
+    scales
 Suggests:
     knitr
 RoxygenNote: 5.0.1

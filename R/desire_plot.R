@@ -101,7 +101,7 @@ desire_plot <- function(x, plot_type = plot.type){
     labs(x = "Rank", y = "Overall Desirability Score") +
     theme_classic() +
     theme(legend.position="right") +
-    scale_colour_brewer(name = "Data Type", type = "qual", palette = "Paired", direction = 1)
+    scale_colour_brewer(name = "Data Type", type = "div", palette = "Spectral", direction = 1)
 
   # Plot ranks from individual desirability scores
   study <- dat
@@ -157,7 +157,7 @@ desire_plot <- function(x, plot_type = plot.type){
     labs(x = "Rank", y = "Relative Individual Rank (log10)") +
     theme_classic() +
     theme(legend.position="right") +
-    scale_colour_brewer(name = "Study", type = "qual", palette = "Paired", direction = 1) +
+    scale_colour_brewer(name = "Study", type = "div", palette = "Spectral", direction = 1) +
     scale_y_continuous(trans=reverselog_trans(10), breaks = c(0, 0.0005, 0.01, 1))
 
   if (plot_type == "o") {
