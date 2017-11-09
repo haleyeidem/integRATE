@@ -36,10 +36,9 @@ desire_plot <- function(x, plot_type = plot.type){
                    y = overall[,2]),
                size = 2,
                color = "black",
-               alpha = 0.5) +
+               alpha = 1) +
     labs(x = "Rank",
          y = "Overall Desirability Score") +
-    scale_y_continuous(limits = c(0, 1), breaks=seq(0, 1, 0.1)) +
     theme_classic()
 
   # Plot top genes by overall desirability
@@ -79,7 +78,7 @@ desire_plot <- function(x, plot_type = plot.type){
   type.melt[2] <- gsub(".*\\((.*)\\).*", "\\1", type.melt[,2])
 
   p3 <- ggplot() +
-    geom_point(position=position_dodge(width = .1),
+    geom_point(position=position_dodge(width = .15),
                aes(
                  x = rep(seq(1,length(type[,1]),1),length(type)-1),
                  y = type.melt[,3],
@@ -98,7 +97,7 @@ desire_plot <- function(x, plot_type = plot.type){
         paste('8\n', type.melt[8,1]),
         paste('9\n', type.melt[9,1]),
         paste('10\n', type.melt[10,1]))) +
-    labs(x = "Rank", y = "Overall Desirability Score") +
+    labs(x = "Rank", y = "Desirability Score") +
     theme_classic() +
     theme(legend.position="right") +
     scale_colour_brewer(name = "Data Type", type = "div", palette = "Spectral", direction = 1)
@@ -134,7 +133,7 @@ desire_plot <- function(x, plot_type = plot.type){
 
   p4 <- ggplot() +
     geom_point(data = study.melt,
-               position=position_dodge(width = .6),
+               position=position_dodge(width = .15),
                aes(
                  x = rep(seq(1,length(study[,1]),1),length(study)-2),
                  y = study.melt[,3],
@@ -173,7 +172,7 @@ desire_plot <- function(x, plot_type = plot.type){
     print(p4)
   }
   if (plot_type == "a") {
-    plot_grid(p3, p4, align = "v", ncol = 1, axis = "lrb")
+    plot_grid(p1, p3, p4, align = "v", ncol = 1, axis = "lrb")
   }
 
 }
