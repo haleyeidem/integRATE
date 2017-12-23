@@ -21,7 +21,10 @@ LazyData: TRUE
 Depends:
     R (>= 2.10)
 Imports:
-    dplyr
+    cowplot,
+    ggplot2,
+    reshape2,
+    scales
 Suggests:
     knitr
 RoxygenNote: 5.0.1
