@@ -3,8 +3,8 @@
 library(shinythemes)
 library(shinydashboard)
 library(DT)
-library(dplyr)
 library(plyr)
+library(dplyr)
 library(data.table)
 library(shinyFiles)
 
@@ -15,23 +15,6 @@ source('desire_plot.R')
 # server #######################################################################
 
 server <- function(input, output, session) {
-
-  meta <- reactive({
-    inFile <- input$files
-    if (is.null(inFile)) {
-      return(NULL)
-    }
-    inFile
-  })
-
-  output$metadata <- DT::renderDataTable(meta(),
-                                         extensions = list('FixedHeader' = NULL
-                                                           ),
-                                         options = list(scrollY = 200,
-                                                        autoWidth=TRUE,
-                                                        dom = "t"
-                                                        ),
-                                         rownames = FALSE)
 
   dat <- reactive({
     inFile <- input$files
@@ -110,9 +93,20 @@ server <- function(input, output, session) {
                                            ),
                                            rownames = FALSE)
 
-  observeEvent(input$analyze, {
-    session$sendCustomMessage(type = 'testmessage',
-                              message = 'Thank you for clicking')
+  output$variables <- renderUI({
+    vars <- c(colnames(dat()[,-1]))
+    checkboxGroupInput("cities", "Choose Cities", cities)
+  })
+
+  output$variables <- renderUI({
+    inFile <- input$files
+    if (is.null(inFile)) {
+      return(NULL)
+    }
+    num <- ncol(dat())-1
+    variables <- c(colnames(dat()[,-1]))
+    lapply(1:num, function(i) {
+      selectInput(inputId = paste0("var", i), label = variables[i], c("Low", "Extreme", "High"))})
   })
 
 }
@@ -164,13 +158,11 @@ ui <- dashboardPage(skin = "black",
               fluidRow(
                 box(width = 12,
                     solidHeader = TRUE,
-                    collapsible = TRUE,
-                    title = "Add data",
+                    title = "Select data",
                     fileInput("files",
                               label = "",
                               multiple = TRUE
-                    ),
-                    DT::dataTableOutput('metadata')
+                    )
                 )
               ),
 
@@ -193,32 +185,25 @@ ui <- dashboardPage(skin = "black",
                     tabsetPanel(
                       tabPanel(
                         title = "Individual parameters",
-                        DT::dataTableOutput('individual')
+                        uiOutput("variables")
                       ),
                       tabPanel(
-                        title = "Overall parameters",
-                        DT::dataTableOutput('overall')
-                      ),
-                      hr(),
-                      actionButton("analyze", "Analyze")
-                    ),
-                    verbatimTextOutput("test")
+                        title = "Overall parameters"
+                      )
+                )
                 )
               ),
 
               fluidRow(
                 box(width = 12,
                     solidHeader = TRUE,
-                    title = "Plot",
+                    title = "Results",
                     tabsetPanel(
                       tabPanel(
                         title = "Overall desirability"
                       ),
                       tabPanel(
                         title = "Top candidates"
-                      ),
-                      tabPanel(
-                        title = "Clustered candidates"
                       )
                     )
                 )
@@ -230,46 +215,8 @@ ui <- dashboardPage(skin = "black",
               fluidRow(
                 box(width = 12,
                     solidHeader = TRUE,
-                    collapsible = TRUE,
-                    collapsed = TRUE,
-                    title = "What IS integRATE?"
-                )
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    solidHeader = TRUE,
-                    collapsible = TRUE,
-                    collapsed = TRUE,
-                    title = "What ISN'T integRATE?"
-                )
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    solidHeader = TRUE,
-                    collapsible = TRUE,
-                    collapsed = TRUE,
-                    title = "When should I use integRATE?"
-                )
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    solidHeader = TRUE,
-                    collapsible = TRUE,
-                    collapsed = TRUE,
-                    title = "How should my data be organized?"
-                )
-              ),
-
-              fluidRow(
-                box(width = 12,
-                    solidHeader = TRUE,
-                    collapsible = TRUE,
-                    collapsed = TRUE,
-                    title = "Where can I find more information?"
-                )
+                    title = "Coming soon..."
+                    )
               )
 
       )
