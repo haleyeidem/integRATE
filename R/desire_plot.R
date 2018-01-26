@@ -28,10 +28,11 @@ desire_plot <- function(x, plot_type = plot.type){
 
   # Sort data by overall desirability score
   dat <- x[rev(order(x[,2])),]
+  num <- 1 / (ncol(dat)-2)
 
   # Plot all genes and their overall desirability scores
   overall <- dat
-  p1 <- ggplot() +
+  p <- ggplot() +
     geom_point(aes(x = seq(length(overall[,2])),
                    y = overall[,2]),
                size = 2,
@@ -40,6 +41,8 @@ desire_plot <- function(x, plot_type = plot.type){
     labs(x = "Rank",
          y = "Overall Desirability Score") +
     theme_classic()
+
+  p1 <- p + geom_hline(yintercept=num, linetype='dashed', color='red')
 
   # Plot top genes by overall desirability
   top <- dat
@@ -71,9 +74,9 @@ desire_plot <- function(x, plot_type = plot.type){
   colnames(type)[2] <- "Overall"
 
   type.melt <- melt(type,
-                   id.vars = c("Gene"),
-                   value.name = c("Desirability"),
-                   variable.name = c("Type"))
+                    id.vars = c("Gene"),
+                    value.name = c("Desirability"),
+                    variable.name = c("Type"))
 
   type.melt[2] <- gsub(".*\\((.*)\\).*", "\\1", type.melt[,2])
 
@@ -105,8 +108,8 @@ desire_plot <- function(x, plot_type = plot.type){
   # Plot ranks from individual desirability scores
   study <- dat
   study[,3:length(study)] <- lapply(-study[,3:length(study)],
-                                rank,
-                                ties.method = 'min')
+                                    rank,
+                                    ties.method = 'min')
 
   # Calculate number of unique ranks in each study
   nums <- c()
@@ -118,9 +121,9 @@ desire_plot <- function(x, plot_type = plot.type){
   study <- study[1:10,]
   study[,3:length(study)] <- sweep(study[,3:length(study)],2,nums[3:length(study)],"/")
   study.melt <- melt(study[,-2],
-                   id.vars = c("Gene"),
-                   value.name = c("Individual Rank"),
-                   variable.name = c("Data"))
+                     id.vars = c("Gene"),
+                     value.name = c("Individual Rank"),
+                     variable.name = c("Data"))
 
   # Custom reverse log scale for y-axis
   reverselog_trans <- function(base = exp(1)) {
