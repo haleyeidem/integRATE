@@ -39,6 +39,6 @@ desire_overall <- function(..., weights = NULL){
     w <- weights
   }
 
-  # Calculate weighted geometric mean and return overall desirability score
-  y <- apply(desire_all, 1, function(x) mean(w[!is.na(x)])); return(y)
+  # Calculate weighted arithmetic mean and return overall desirability score
+  y <- apply(desire_all, 1, function(x) weighted.mean(x, w, na.rm = TRUE))
 }
