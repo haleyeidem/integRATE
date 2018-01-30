@@ -40,7 +40,9 @@ desire_plot <- function(x, plot_type = plot.type){
                alpha = 1) +
     labs(x = "Rank",
          y = "Overall Desirability Score") +
-    theme_classic()
+    theme_classic() +
+    scale_x_continuous(breaks = c(0, 5000, 10000, 15000, 20000, 25000),
+                       labels = c('0', '5,000', '10,000', '15,000', '20,000', '25,000'))
 
   p1 <- p + geom_hline(yintercept=num, linetype='dashed', color='red')
 
