@@ -4,7 +4,7 @@
 \alias{desire_plot}
 \title{Plot desirability scores}
 \usage{
-desire_plot(x)
+desire_plot(x, plot_type = plot.type)
 }
 \arguments{
 \item{x}{A data matrix where the first column is overall desirability and
@@ -23,4 +23,3 @@ as their individual desirability scores from integrated data, the user can
 visualize not only the most desirable candidates, but also where the
 desirability signal is coming from within their data.
 }
-

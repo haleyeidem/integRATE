@@ -36,4 +36,3 @@ extreme values are most desirable.
 \details{
 
 }
-

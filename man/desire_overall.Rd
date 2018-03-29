@@ -25,4 +25,3 @@ overall desirability score.
 Using a weighted geometric mean, this function combines individual
 desirability scores to calculate overall desirability scores.
 }
-
