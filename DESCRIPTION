@@ -24,7 +24,10 @@ Imports:
     cowplot,
     ggplot2,
     reshape2,
-    scales
+    scales,
+    plyr,
+    dplyr,
+    readr
 Suggests:
     knitr
 RoxygenNote: 6.0.1
