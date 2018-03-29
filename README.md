@@ -14,7 +14,11 @@ Major steps
 ---
 ---
 
-integRATE relies on three main steps to identify studies, integrate data, and rank candidate genes. First, relevant studies must be identified for integration based on any number of features including, but not limited to: phenotype, experimental design, and data availability.
+integRATE relies on three main steps to identify studies, integrate data, and rank candidate genes.
+
+![integRATE Methods](https://github.com/haleyeidem/integRATE/blob/master/R/www/methods.pdf)
+
+First, relevant studies must be identified for integration based on any number of features including, but not limited to: phenotype, experimental design, and data availability.
 
 ### Variable transformation (desire_individual)
 
