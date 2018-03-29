@@ -10,6 +10,13 @@ integRATE: How do I use it?
 ---
 ---
 
+### Installation from GitHub
+
+1. install.packages("devtools")
+2. devtools::install_github("eidemhr/integRATE")
+
+### Methods
+
 integRATE relies on four main steps to identify studies, integrate data, and rank candidate genes.
 
 ![](methods.png)
