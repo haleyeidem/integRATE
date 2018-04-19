@@ -13,6 +13,8 @@
 #' @return Returns a numeric vector of overall desirability scores.
 #' @export
 
+# some of the following code is based on https://github.com/stanlazic/desiR
+
 desire_overall <- function(..., weights = NULL){
 
   # Get number of variables
